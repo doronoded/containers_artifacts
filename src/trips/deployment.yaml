@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trips
+  namespace: api
+  labels:
+    app: trips
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trips
+  template:
+    metadata:
+      labels:
+        app: trips
+    spec:
+      containers:
+      - name: trips
+        image: openhackteam2acr.azurecr.io/tripinsights/trips:1.0
+      ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+      envFrom:
+      - secretRef:
+          name: "dbconnectionstring"
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trips
+spec:
+  selector:
+    app.kubernetes.io/name: trips
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
