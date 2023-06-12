@@ -32,9 +32,10 @@ kind: Service
 metadata:
   name: trips
 spec:
+  type: ClusterIP
   selector:
-    app.kubernetes.io/name: trips
+    app: trips
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 9376
+      targetPort: 80
