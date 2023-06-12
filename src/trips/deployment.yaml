@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: trips
-  namespace: api
+  namespace: backend
   labels:
     app: trips
 spec:
@@ -18,13 +18,13 @@ spec:
       containers:
       - name: trips
         image: openhackteam2acr.azurecr.io/tripinsights/trips:1.0
-      ports:
+        envFrom:
+          - secretRef:
+              name: dbconnectionstring
+        ports:
         - name: http
           containerPort: 80
           protocol: TCP
-      envFrom:
-      - secretRef:
-          name: "dbconnectionstring"
       
 ---
 apiVersion: v1
@@ -37,6 +37,6 @@ spec:
   selector:
     app: trips
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+  - protocol: TCP
+    port: 80
+    targetPort: 80
